@@ -1,0 +1,46 @@
+{
+  "name": "backened",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha ./test  --exit",
+    "start": "node ./src/app.js",
+    "s": "nodemon ./src/app.js"
+  },
+  "author": "IgnacioMarelli <ignacio.marelli@hotmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "commander": "^10.0.1",
+    "connect-mongo": "^5.0.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-handlebars": "^7.0.1",
+    "express-session": "^1.17.3",
+    "handlebars-helpers": "^0.10.0",
+    "mime-types": "^2.1.35",
+    "mongoose": "^7.0.3",
+    "mongoose-paginate-v2": "^1.7.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.2",
+    "nodemon": "^2.0.22",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "socket.io": "^4.6.1",
+    "stripe": "^12.13.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3",
+    "sweetalert2": "^11.7.3",
+    "twilio": "^4.14.0",
+    "winston": "^3.9.0"
+  },
+  "repository": "https://github.com/IgnacioMarelli/Backened23.git",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
+  }
+}
