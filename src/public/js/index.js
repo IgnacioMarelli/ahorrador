@@ -105,7 +105,7 @@ async function nombreClick(){
                     icon: 'error'
                   });   
         }else{
-        const response = await api.post('/',{first_name});
+        const response = await api.post('/inicio',{first_name});
         if (response.ok) {
             Swal.fire({
                 title: 'Excelente',
