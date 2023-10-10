@@ -27,7 +27,7 @@ app.use(express.static(__dirname+'/public'));
 app.use(addLogger)
 app.set('views', __dirname+'/views');
 app.use('/api', router);
-app.use('/', routerUser);
+app.use('/inicio', routerUser);
 app.use('/guiso', routerGuiso);
 
 app.get('/api/loggerTest', (req, res) => {
