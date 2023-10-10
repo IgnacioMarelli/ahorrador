@@ -11,7 +11,7 @@ body{
     border-radius: 3rem;
     margin-bottom: 1rem;
 }
-span{
+.span{
     box-shadow: 10px 10px 8px 1px rgba(0, 0, 0, 0.2);
     background: #0F2027;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
@@ -47,3 +47,36 @@ p{
     margin: 3px;
     display: inline-block;
 }
+@media only screen and (max-width: 600px) {
+  
+    /* Estilo del botón */
+    .boton {
+      font-size: small; /* Reducir el tamaño de la fuente */
+      padding: 5px; /* Reducir el relleno */
+    }
+  
+    /* Estilo del span */
+    span {
+      font-size: small; /* Reducir el tamaño de la fuente */
+      padding-left: 0.5rem; /* Reducir el relleno izquierdo */
+      padding-right: 0.5rem; /* Reducir el relleno derecho */
+    }
+  
+     /* Estilo del input */
+     .input {
+       width: 80%; /* Ajustar el ancho al espacio disponible */
+     }
+  
+     .Inicio {
+       margin-top: 2rem; 
+     }
+     .card {
+       padding: 5px; /* Reducir el relleno */
+     }
+  
+     /* Estilo del párrafo */
+     p {
+       font-size: medium; /* Reducir el tamaño de la fuente */
+       padding-top: 0.5rem; /* Reducir el relleno superior */
+     }
+  }
