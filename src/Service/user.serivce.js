@@ -14,19 +14,19 @@ export default class userService {
             if(!user){
                await this.postRegister(req);
             }else{
-                const fechaInicio =user.creationDate;
+                const fechaInicio =user.date;
                 const fechaFin =Date.now();
                 const diferencia = fechaFin - fechaInicio;
                 let horasPasadas = Math.round(diferencia / (1000 * 60 * 60));
                 const diasPasados = horasPasadas/24;
-                if (diasPasados && diasPasados>1) {
+                if (diasPasados && diasPasados>=1) {
                     const diasRedondos= Math.round(diasPasados);
-                    const suma=req.user.objetivoDiario+req.user.objetivoDiario*diasRedondos;
+                    const suma=user.objetivoDiario+user.objetivoDiario*diasRedondos;
                     if(diasPasados>30.4){
                         const tiempo=user.tiempo-1;
                         await this.#dao.updateUser(req.user.first_name, req.user, {tiempo: tiempo});   
                     }
-                    await this.#dao.updateUser(req.user.first_name, req.user, {objetivoDiario: suma, last_connection:horasPasadas});       
+                    await this.#dao.updateUser(user.first_name, user, {objetivoDiario: suma, date:fechaFin});       
                 }
              }
             const newUser = await this.#dao.findByName(req.body.first_name)

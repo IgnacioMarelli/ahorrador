@@ -12,11 +12,7 @@ const userSchema = new mongoose.Schema({
       }
     ], default:[]
   },
-  last_connection:{
-    type:Number,
-    default: 0
-  },
-  creationDate:{type:Date},
+  date:{type:Date},
   objetivoDiario:{
     type:Number,
     default: 0

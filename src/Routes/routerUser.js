@@ -5,7 +5,7 @@ import { uploader } from '../utils/middlewares/multer.js';
 import userController from '../controllers/user.controller.js';
 
 routerUser.get('/',userController.inicio.bind(userController))
-routerUser.post('/', created(), guiso(), userController.iniciar.bind(userController))
+routerUser.post('/', created(), guiso(),  userController.iniciar.bind(userController))
 routerUser.delete('/', passportCall('jwt'), userController.deleteUsers.bind(userController))
 routerUser.post('/auth/logout',passportCall('jwt'), userController.logout.bind(userController));
 routerUser.put('/:idUser', passportCall('jwt'), userController.updateUser.bind(userController));

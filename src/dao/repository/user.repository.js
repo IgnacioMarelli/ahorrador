@@ -12,7 +12,7 @@ class UserRepository {
     }
     async create(user, date){
         try {
-            return await this.#model.create({...user, creationDate: date});
+            return await this.#model.create({...user, date: date});
         } catch (error) {
             console.error(error);
         }
