@@ -14,7 +14,7 @@ async function primerClick(){
                 icon: 'success'
             });
             setTimeout(function() {
-                location.href = 'http://localhost:8080/api/inicio';
+                location.href = 'https://ahorrador-production.up.railway.app/api/inicio';
             }, 3000);
         }else{
             if(response.status===500){
@@ -113,7 +113,7 @@ async function nombreClick(){
                 icon: 'success'
             });
             setTimeout(function() {
-                location.href = 'http://localhost:8080/api';
+                location.href = 'https://ahorrador-production.up.railway.app/api';
             }, 2000);
         }else{
             if(response.status===500){
@@ -148,7 +148,7 @@ async function depositar(){
                 icon: 'success'
             });
             setTimeout(function() {
-                location.href = 'http://localhost:8080/guiso';
+                location.href = 'https://ahorrador-production.up.railway.app/guiso';
             }, 3000);
         }else{
             if(response.status===500){
