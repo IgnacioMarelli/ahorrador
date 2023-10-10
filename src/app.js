@@ -14,7 +14,7 @@ import errorMiddleware from './utils/middlewares/error.middleware.js';
 import { addLogger } from './utils/winston.customlevels.js';
 import { routerGuiso } from './Routes/routerGuiso.js';
 const {MONGO_URL, DAO} = config;
-const PORT = config.PORT || 3000;
+const PORT = config.PORT || 8080;
 if(DAO==='MONGO'){
 mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
