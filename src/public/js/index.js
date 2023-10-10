@@ -15,7 +15,7 @@ async function primerClick(){
             });
             setTimeout(function() {
                 location.href = 'https://ahorrador-production.up.railway.app/api/inicio';
-            }, 3000);
+            }, 500);
         }else{
             if(response.status===500){
                 Swal.fire({
@@ -73,7 +73,7 @@ async function segundoClick(){
             });
             setTimeout(function() {
                 location.reload(true);
-            }, 3000);
+            }, 500);
         }else{
             if(response.status===500){
                 Swal.fire({
@@ -114,7 +114,7 @@ async function nombreClick(){
             });
             setTimeout(function() {
                 location.href = 'https://ahorrador-production.up.railway.app/api';
-            }, 2000);
+            }, 500);
         }else{
             if(response.status===500){
                 Swal.fire({

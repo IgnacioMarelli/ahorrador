@@ -6,7 +6,7 @@ const { __dirname } = fileDirName(import.meta);
 import * as path from 'path';
 export default function configureHandlebars(app) {
     const hbs = create({
-        partialsDir: [path.join(__dirname, '..','/views/partials')],
+        partialsDir: [path.join(__dirname, '..','/views')],
     });
     handlebarsHelpers({ handlebars });
     app.engine('handlebars', hbs.engine);

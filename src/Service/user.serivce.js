@@ -22,6 +22,10 @@ export default class userService {
                 if (diasPasados && diasPasados>1) {
                     const diasRedondos= Math.round(diasPasados);
                     const suma=req.user.objetivoDiario+req.user.objetivoDiario*diasRedondos;
+                    if(diasPasados>30.4){
+                        const tiempo=user.tiempo-1;
+                        await this.#dao.updateUser(req.user.first_name, req.user, {tiempo: tiempo});   
+                    }
                     await this.#dao.updateUser(req.user.first_name, req.user, {objetivoDiario: suma, last_connection:horasPasadas});       
                 }
              }
