@@ -17,16 +17,6 @@ class Controller {
             next(error)
         }
     }
-    async getOneProd(req,res,next){
-        try {
-            const product = await this.#service.getOneProd(req);
-            const user = req.user;
-            const cart = req.user.cart[0]?.products?.length === 0 ? null : req.user.cart[0]?._id ?? null;
-            res.render('prod',{products: product, user:user, cart:cart});
-        } catch (error) {
-            next(error)
-        }
-    }
     async post(req,res,next){
         try {
             const gastos = await this.#service.post(req, res)

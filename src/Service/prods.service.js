@@ -17,15 +17,12 @@ export default class ProdService {
             const result = await response.json();
             const objetivo = await this.#dao.findByName(req.user.first_name);
             await this.plazoFijo(objetivo)
+            const diarioPesificado= objetivo.objetivoDiario* result.venta;
             const ahorro = objetivo.objetivo - objetivo.disponible;
             const real = ahorro/objetivo.tiempo;
             const objetivoMensual = objetivo.salario-real;
-            const mesPesificado=objetivoMensual* result.venta;
-            const objetivoDiario = objetivoMensual/30.4;
-            const diarioPesificado= objetivoDiario* result.venta;
-            
-            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:objetivo.tiempo}
-            await this.#dao.updateUser(objetivo.first_name, objetivo, {objetivoDiario:objetivoDiario})
+            const mesPesificado = objetivoMensual* result.venta;
+            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:objetivo.tiempo};
             return sueño
         } catch (error) {
             console.error(error);
@@ -44,6 +41,10 @@ export default class ProdService {
             const salario = req.body.salario/result.venta;
             const tiempo = req.body.tiempo;
             const user = req.user;
+            const ahorro = objetivoTotal - ahorros;
+            const real = ahorro/tiempo;
+            const objetivoMensual = salario-real;
+            const objetivoDiario = objetivoMensual/30.4;
             const keyWithEmptyValue = Object.entries(req.body).find(([key, value]) => value === "");
             if(keyWithEmptyValue){
                 CustomError.createError({
@@ -53,7 +54,7 @@ export default class ProdService {
                     code: ErrorEnum.BODY_ERROR
                 })
             }
-            const sueño = await this.#dao.updateUser(user.first_name, user, {objetivo:objetivoTotal, tiempo: tiempo, salario: salario, disponible:ahorros});
+            const sueño = await this.#dao.updateUser(user.first_name, user, {objetivo:objetivoTotal, tiempo: tiempo, salario: salario, disponible:ahorros, objetivoDiario:objetivoDiario});
             return sueño
         }catch (error) {
             throw CustomError.createError({

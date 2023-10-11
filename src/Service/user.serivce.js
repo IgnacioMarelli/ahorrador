@@ -20,8 +20,12 @@ export default class userService {
                 let horasPasadas = Math.round(diferencia / (1000 * 60 * 60));
                 const diasPasados = horasPasadas/24;
                 if (diasPasados && diasPasados>=1) {
+                    const ahorro = user.objetivo - user.disponible;
+                    const real = ahorro/user.tiempo;
+                    const objetivoMensual = user.salario-real;
+                    const objetivoDiario = objetivoMensual/30.4;
                     const diasRedondos= Math.round(diasPasados);
-                    const suma=user.objetivoDiario+user.objetivoDiario*diasRedondos;
+                    const suma=user.objetivoDiario+objetivoDiario*diasRedondos;
                     if(diasPasados>30.4){
                         const tiempo=user.tiempo-1;
                         await this.#dao.updateUser(req.user.first_name, req.user, {tiempo: tiempo});   
