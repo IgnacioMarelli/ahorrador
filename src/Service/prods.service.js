@@ -13,7 +13,8 @@ export default class ProdService {
             method: 'GET'
         }
         const response = await fetch(url, options);        
-        return await response.json();
+        const result = await response.json();
+        return result.venta
     }
     async getObjetivo(req){
         try { 
@@ -21,7 +22,7 @@ export default class ProdService {
             await this.updateDay(user)
             await this.plazoFijo(user)
             user = await this.#dao.findByName(req.user.first_name);
-            const diarioPesificado= await this.objetivoDiario(user.objetivo, user.disponiblePesos, user.tiempo, user.salario)
+            const diarioPesificado= await this.objetivoDiario(user.objetivo, user.disponiblePesos, user.tiempo, user.salario, user.disponibleUSD)
             const mesPesificado = diarioPesificado*30.4;
             const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:user.tiempo};
             return sueño
@@ -62,13 +63,14 @@ export default class ProdService {
     
     async objetivoDiario(objetivo, disponible, tiempo, salario, ahorrosUSD){
         const result = await this.getDolarBlue();
-        const ahorroDolar= disponible*result.venta+ahorrosUSD;
+        const ahorroPesoDolar= disponible/result;
+        const ahorroDolar= ahorroPesoDolar+ahorrosUSD;
         const ahorro = objetivo - ahorroDolar;
         const real = ahorro/tiempo;
-        const salarioDolar = salario*result.venta
+        const salarioDolar = salario/result;
         const objetivoMensual = salarioDolar-real;
         const objetivoDiario = objetivoMensual/30.4;
-        return objetivoDiario
+        return objetivoDiario*result
     }
     async update(req){
         try {
