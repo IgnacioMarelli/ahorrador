@@ -85,6 +85,11 @@ export default class ProdService {
                 user = await this.#dao.findByName(name);
             }
             await this.#dao.updateUser(user.first_name, user, data);
+            if(req.body.mp===true){
+                const mpId= user.plazoFijoMP._id.toString();
+                const realData={pesos: user.plazoFijoMP.pesos+ingreso}
+                await this.#depositoService.updateDeposito(mpId, user.plazoFijoMP, realData);
+            }
         } catch (error) {
             console.error(error);
         }
