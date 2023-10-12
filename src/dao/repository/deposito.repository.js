@@ -8,7 +8,7 @@ class DepositoRepository {
     }
     async create(fecha, cantidad,mp){
         try {
-            if(mp==='mercadopago'){return await this.#model.create({date:fecha, pesos:cantidad,porcentaje:94.1});}
+            if(mp==='mercadopago'){return await this.#model.create({date:fecha, pesos:cantidad,porcentaje:95.7});}
             return await this.#model.create({date:fecha, pesos:cantidad});
         } catch (error) {
             console.error(error);

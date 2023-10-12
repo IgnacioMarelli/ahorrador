@@ -17,8 +17,12 @@ const userSchema = new mongoose.Schema({
     type:Number,
     default: 0
   },
-  disponible:{
+  disponiblePesos:{
     type:Number
+  },
+  disponibleUSD:{
+    type:Number,
+    default: 0
   },
   tiempo:{
       type:Number,

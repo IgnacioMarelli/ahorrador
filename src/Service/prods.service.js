@@ -7,22 +7,23 @@ export default class ProdService {
       this.#dao = dao;
       this.#depositoService=depositoService;
     }
+    async getDolarBlue(){
+        const url = 'https://dolarapi.com/v1/dolares/blue';
+        const options = {
+            method: 'GET'
+        }
+        const response = await fetch(url, options);        
+        return await response.json();
+    }
     async getObjetivo(req){
-        try {
-            const url = 'https://dolarapi.com/v1/dolares/blue';
-            const options = {
-                method: 'GET'
-            }
-            const response = await fetch(url, options);        
-            const result = await response.json();
-            const objetivo = await this.#dao.findByName(req.user.first_name);
-            await this.plazoFijo(objetivo)
-            const diarioPesificado= objetivo.objetivoDiario* result.venta;
-            const ahorro = objetivo.objetivo - objetivo.disponible;
-            const real = ahorro/objetivo.tiempo;
-            const objetivoMensual = objetivo.salario-real;
-            const mesPesificado = objetivoMensual* result.venta;
-            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:objetivo.tiempo};
+        try { 
+            let user = await this.#dao.findByName(req.user.first_name);
+            await this.updateDay(user)
+            await this.plazoFijo(user)
+            user = await this.#dao.findByName(req.user.first_name);
+            const diarioPesificado= await this.objetivoDiario(user.objetivo, user.disponiblePesos, user.tiempo, user.salario)
+            const mesPesificado = diarioPesificado*30.4;
+            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:user.tiempo};
             return sueño
         } catch (error) {
             console.error(error);
@@ -30,21 +31,14 @@ export default class ProdService {
     }
     async post(req, res){
         try {
-            const url = 'https://dolarapi.com/v1/dolares/blue';
-            const options = {
-                method: 'GET'
-            }
-            const response = await fetch(url, options);        
-            const result = await response.json();
+            const result = await this.getDolarBlue();
             const objetivoTotal = req.body.objetivo/result.venta;
-            const ahorros = req.body.ahorros/result.venta;
-            const salario = req.body.salario/result.venta;
+            const ahorros = req.body.ahorros;
+            const ahorrosUSD = req.body.ahorrosUSD*result.venta;
+            const salario = req.body.salario;
             const tiempo = req.body.tiempo;
             const user = req.user;
-            const ahorro = objetivoTotal - ahorros;
-            const real = ahorro/tiempo;
-            const objetivoMensual = salario-real;
-            const objetivoDiario = objetivoMensual/30.4;
+            const objetivoDiario = await this.objetivoDiario(objetivoTotal, ahorros, tiempo, salario, ahorrosUSD);
             const keyWithEmptyValue = Object.entries(req.body).find(([key, value]) => value === "");
             if(keyWithEmptyValue){
                 CustomError.createError({
@@ -54,7 +48,7 @@ export default class ProdService {
                     code: ErrorEnum.BODY_ERROR
                 })
             }
-            const sueño = await this.#dao.updateUser(user.first_name, user, {objetivo:objetivoTotal, tiempo: tiempo, salario: salario, disponible:ahorros, objetivoDiario:objetivoDiario});
+            const sueño = await this.#dao.updateUser(user.first_name, user, {objetivo:objetivoTotal, tiempo: tiempo, salario: salario, disponiblePesos:ahorros, disponibleUSD:ahorrosUSD, objetivoDiario:objetivoDiario});
             return sueño
         }catch (error) {
             throw CustomError.createError({
@@ -65,18 +59,25 @@ export default class ProdService {
             })
         }
     }
+    
+    async objetivoDiario(objetivo, disponible, tiempo, salario, ahorrosUSD){
+        const result = await this.getDolarBlue();
+        const ahorroDolar= disponible*result.venta+ahorrosUSD;
+        const ahorro = objetivo - ahorroDolar;
+        const real = ahorro/tiempo;
+        const salarioDolar = salario*result.venta
+        const objetivoMensual = salarioDolar-real;
+        const objetivoDiario = objetivoMensual/30.4;
+        return objetivoDiario
+    }
     async update(req){
         try {
-            const url = 'https://dolarapi.com/v1/dolares/blue';
-            const options = {
-                method: 'GET'
-            }
-            const response = await fetch(url, options);        
-            const result = await response.json();
-            const ingreso= req.body.ingreso/result.venta;
+            const ingreso= req.body.ingreso;
             const name = req.user.first_name;
             let user = await this.#dao.findByName(name);
-            let data = {disponible:user.disponible+ingreso};
+            await this.updateDay(user);
+            user = await this.#dao.findByName(name);
+            let data = {disponiblePesos:user.disponiblePesos+ingreso};
             if (req.body.plazoFijo) {
                 await this.addPlazoFijo(req, name);
                 user = await this.#dao.findByName(name);
@@ -86,6 +87,27 @@ export default class ProdService {
             console.error(error);
         }
     }   
+    async updateDay(user){
+        const fechaInicio =user.date;
+        const fechaFin =Date.now();
+        const diferencia = fechaFin - fechaInicio;
+        let horasPasadas = Math.round(diferencia / (1000 * 60 * 60));
+        const diasPasados = horasPasadas/24;
+        if (diasPasados && diasPasados>=1) {
+            const ahorro = user.objetivo - user.disponiblePesos;
+            const real = ahorro/user.tiempo;
+            const objetivoMensual = user.salario-real;
+            const objetivoDiario = objetivoMensual/30.4;
+            const diasRedondos= Math.round(diasPasados);
+            const suma=user.objetivoDiario+objetivoDiario*diasRedondos;
+            if(diasPasados>30.4){
+                const tiempo=user.tiempo-1;
+                await this.#dao.updateUser(req.user.first_name, req.user, {tiempo: tiempo});   
+            }
+            await this.#dao.updateUser(user.first_name, user, {objetivoDiario: suma, date:fechaFin});       
+        }
+
+    }
     async plazoFijo(user){
         if(user.plazoFijoBanco.length>0){
             user.plazoFijoBanco.forEach(async e => {

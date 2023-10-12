@@ -4,9 +4,10 @@ async function primerClick(){
     try{
         const objetivo= document.querySelector(".objetivo").value;
         const ahorros = document.querySelector(".ahorros").value;
+        const ahorrosUSD = document.querySelector(".ahorrosUSD").value;
         const salario = document.querySelector(".salario").value;
         const tiempo = document.querySelector(".tiempo").value;
-        const response = await api.post(`/api`,{objetivo,ahorros,tiempo,salario});
+        const response = await api.post(`/api`,{objetivo,ahorros,tiempo,salario,ahorrosUSD});
         if (response.ok) {
             Swal.fire({
                 title: 'Excelente',
@@ -44,6 +45,7 @@ async function segundoClick(){
         const nuevoGasto = document.querySelector(".nuevoGasto").value*-1;
         const banco = document.getElementById("Banco");
         const mercadopago = document.getElementById("MercadoPago");
+        const mercadopagoGasto = document.getElementById("MercadoPagoGasto");
         let response;
         let ingreso;
         let plazoFijo;
@@ -58,7 +60,8 @@ async function segundoClick(){
           } else {
             if (nuevoGasto<0) {
                 ingreso=nuevoGasto;
-                response = await api.put(`/api/inicio`,{ingreso});
+                const mpGasto= mercadopagoGasto.checked;
+                response = await api.put(`/api/inicio`,{ingreso, mpGasto});
               }else{
                   ingreso=nuevoIngreso;
                   response = await api.put(`/api/inicio`,{ingreso});

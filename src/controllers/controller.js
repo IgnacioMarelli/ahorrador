@@ -37,7 +37,7 @@ class Controller {
     async update(req, res, next){
         try {
             await this.#service.update(req);
-            res.status(200).send();
+            await this.inicio(req, res, next);
         } catch (error) {
             next(error)
         }
