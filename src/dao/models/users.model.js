@@ -44,13 +44,10 @@ const userSchema = new mongoose.Schema({
       ], default: []
   },
   plazoFijoMP:{
-      type: [
-          {
-            deposito: {type: mongoose.Schema.Types.ObjectId, ref: 'deposito'}
-          }
-      ], default: []
-  }  
-});
+    date:{type:Date},
+    pesos:{type: Number, default: 0},
+    porcentaje:{type:Number, default: 95.5}
+  }});
 
 
 export const userModel = mongoose.model(userCollection, userSchema);

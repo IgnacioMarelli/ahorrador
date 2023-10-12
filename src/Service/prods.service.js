@@ -74,7 +74,7 @@ export default class ProdService {
     }
     async update(req){
         try {
-            const ingreso= req.body.ingreso;
+            const ingreso= Number(req.body.ingreso);
             const name = req.user.first_name;
             let user = await this.#dao.findByName(name);
             await this.updateDay(user);
@@ -85,10 +85,9 @@ export default class ProdService {
                 user = await this.#dao.findByName(name);
             }
             await this.#dao.updateUser(user.first_name, user, data);
-            if(req.body.mp===true){
-                const mpId= user.plazoFijoMP._id.toString();
+            if(req.body.mpGasto===true){
                 const realData={pesos: user.plazoFijoMP.pesos+ingreso}
-                await this.#depositoService.updateDeposito(mpId, user.plazoFijoMP, realData);
+                await this.#depositoService.updateUser(user.first_name, user, realData);
             }
         } catch (error) {
             console.error(error);
@@ -132,22 +131,26 @@ export default class ProdService {
                 });
         }
         if(user.plazoFijoMP.length>0){
-            user.plazoFijoMP.forEach(async e => {
-                const mes = e.deposito.porcentaje/12;
-                const dia = mes/30.4;
-                const date= Date.now();
-                const milisegundos = date - e.deposito.date;
-                const dias = milisegundos / 86400000;
-                if(dias >= 1){
-                    const porcentaje= e.deposito.pesos*dia/100;
-                    e.deposito.pesos = e.deposito.pesos + porcentaje*dias;
-                    const listo = {deposito:e.deposito.pesos, date:Date.now()};
-                    await this.#dao.updateDeposito(e._id,e,listo)
-                }
-            });
+            const mes = user.plazoFijoMP.porcentaje/12;
+            const dia = mes/30.4;
+            const date= Date.now();
+            const milisegundos = date - user.plazoFijoMP.date;
+            const dias = milisegundos / 86400000;
+            if(dias >= 1){
+                const porcentaje= user.plazoFijoMP.pesos*dia/100;
+                const result = user.plazoFijoMP.pesos + porcentaje*dias;
+                const realData={plazoFijoMP:{pesos:result, date:Date.now()}}
+                await this.#depositoService.updateUser(user.first_name, user, realData);
+            };
     }
     }
     async addPlazoFijo(req,name){
+        req.body.ingreso=Number(req.body.ingreso)
+        if(req.body.plazoFijo==='mercadopago'){
+            const user = await this.#dao.findByName(req.user.first_name);
+            const realData={plazoFijoMP:{pesos:user.plazoFijoMP.pesos+req.body.ingreso, date:Date.now()}}
+            return await this.#dao.updateUser(user.first_name, user, realData);
+        }
         const ahora = Date.now();
         const deposito= await this.#depositoService.create(ahora,req.body.ingreso, req.body.plazoFijo);
         const id = deposito._id.toString();
