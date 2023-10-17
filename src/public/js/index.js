@@ -46,6 +46,7 @@ async function segundoClick(){
         const banco = document.getElementById("Banco");
         const mercadopago = document.getElementById("MercadoPago");
         const mercadopagoGasto = document.getElementById("MercadoPagoGasto");
+        const mercadoPagoIngreso = document.getElementById("MercadoPagoIngreso");
         let response;
         let ingreso;
         let plazoFijo;
@@ -57,6 +58,10 @@ async function segundoClick(){
             ingreso=nuevoIngreso;
             plazoFijo='mercadopago';
             response = await api.put(`/api/inicio`,{ingreso, plazoFijo});
+          }else if(mercadoPagoIngreso.checked){
+            ingreso=nuevoIngreso;
+            const mpGasto = mercadoPagoIngreso.checked;
+            response = await api.put(`/api/inicio`,{ingreso, mpGasto});
           } else {
             if (nuevoGasto<0) {
                 ingreso=nuevoGasto;

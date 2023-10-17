@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     ], default:[]
   },
   date:{type:Date},
+  creationDate:{type:Date},
   objetivoDiario:{
     type:Number,
     default: 0
@@ -49,5 +50,7 @@ const userSchema = new mongoose.Schema({
     porcentaje:{type:Number, default: 95.5}
   }});
 
-
+userSchema.pre('findOne', function() {
+    this.populate('plazoFijoBanco.deposito');
+})
 export const userModel = mongoose.model(userCollection, userSchema);

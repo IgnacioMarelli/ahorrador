@@ -12,11 +12,14 @@ class UserRepository {
     }
     async create(user, date){
         try {
-            return await this.#model.create({...user, date: date});
+            return await this.#model.create({...user, date: date, creationDate: date});
         } catch (error) {
             console.error(error);
         }
 
+    }
+    async updatemp(name, pesos){
+        return await this.#model.updateOne({first_name:name}, {$inc:{"plazoFijoMP.pesos":pesos}});
     }
     async updateUser(name, usuario, nuevosDatos){
         return await this.#model.updateOne({ first_name: name },{ ...usuario, ...nuevosDatos });

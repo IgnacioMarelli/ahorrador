@@ -86,8 +86,7 @@ export default class ProdService {
             }
             await this.#dao.updateUser(user.first_name, user, data);
             if(req.body.mpGasto===true){
-                const realData={pesos: user.plazoFijoMP.pesos+ingreso}
-                await this.#depositoService.updateUser(user.first_name, user, realData);
+                await this.#dao.updatemp(user.first_name, ingreso);
             }
         } catch (error) {
             console.error(error);
@@ -99,6 +98,9 @@ export default class ProdService {
         const diferencia = fechaFin - fechaInicio;
         let horasPasadas = Math.round(diferencia / (1000 * 60 * 60));
         const diasPasados = horasPasadas/24;
+        const diferencia2 = fechaFin - user.creationDate;
+        let horasPasadas2 = Math.round(diferencia2 / (1000 * 60 * 60));
+        const mesesPasados = horasPasadas2/24;
         if (diasPasados && diasPasados>=1) {
             const ahorro = user.objetivo - user.disponiblePesos;
             const real = ahorro/user.tiempo;
@@ -106,11 +108,11 @@ export default class ProdService {
             const objetivoDiario = objetivoMensual/30.4;
             const diasRedondos= Math.round(diasPasados);
             const suma=user.objetivoDiario+objetivoDiario*diasRedondos;
-            if(diasPasados>30.4){
-                const tiempo=user.tiempo-1;
-                await this.#dao.updateUser(req.user.first_name, req.user, {tiempo: tiempo});   
-            }
             await this.#dao.updateUser(user.first_name, user, {objetivoDiario: suma, date:fechaFin});       
+        }
+        if(mesesPasados>30.4){
+            const tiempo=user.tiempo-1;
+            await this.#dao.updateUser(req.user.first_name, req.user, {tiempo: tiempo});   
         }
 
     }
@@ -130,8 +132,8 @@ export default class ProdService {
                     }
                 });
         }
-        if(user.plazoFijoMP.length>0){
-            const mes = user.plazoFijoMP.porcentaje/12;
+        if(user.plazoFijoMP){
+            const mes = 95.3/12;
             const dia = mes/30.4;
             const date= Date.now();
             const milisegundos = date - user.plazoFijoMP.date;
