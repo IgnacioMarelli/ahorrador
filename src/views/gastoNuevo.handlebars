@@ -11,19 +11,34 @@
         <div>
           <p>Nuevo Ingreso: <input type="number" class="input nuevoIngreso"></p><label><input type="checkbox" id="checkbox" onclick="mostrarOpciones()"> Plazo Fijo </label>
           <div id="opciones" style="display: none;">
-              <input type="radio" id="MercadoPago" name="MercadoPago" value="1">
-              <label for="opcion1">Me transfirieron en MercadoPago</label><br>
-              <input type="radio" id="MercadoPagoIngreso" name="MercadoPagoIngreso" value="3">
-              <label for="opcion3">Yo me transferí a MercadoPago</label><br>
-              <input type="radio" id="Banco" name="Banco" value="2" >
-              <label for="opcion2">Banco</label>
+              <input type="radio" id="MercadoPago" name="MercadoPago" onclick="check(MercadoPago)" value="1">
+              <label for="MercadoPago">Me transfirieron en MercadoPago</label><br>
+              <input type="radio" id="MercadoPagoIngreso" name="MercadoPagoIngreso" onclick="check(MercadoPagoIngreso)" value="3">
+              <label for="MercadoPagoIngreso">Yo me transferí a MercadoPago</label><br>
+              <input type="radio" id="Banco" name="Banco" onclick="check(Banco)" value="2" >
+              <label for="Banco">Banco</label>
           </div>
        </div>
-        <p>Nuevo Gasto: <input type="number" class="input nuevoGasto"></p>
-          <input type="radio" id="MercadoPagoGasto" name="MercadoPagoGasto" value="1">
-          <label for="opcion1">Es de MercadoPago el gasto?</label><br>
+        <p>Nuevo Gasto: <input type="number" onclick="options(razon)" class="input nuevoGasto"></p>
+        <p id="razon" style="display: none;">¿En qué gastaste? <input type="text" placeholder="Es opcional :)"  class="input razon" ></p>
+          <input type="radio" id="MercadoPagoGasto" name="MercadoPagoGasto" onclick="check(MercadoPagoGasto)" value="1">
+          <label for="MercadoPagoGasto">Es de MercadoPago el gasto?</label><br>
         <button class="boton" onclick="segundoClick()">Calcular</button> 
     </div>
+  </div>
+  <div class="ingresos">
+      {{#each objetivo.ingresos.docs}}
+      <div class="box span mb-1 d-flex justify-content-between flex-row row-cols-2">
+        <div class="box">
+            <p class="mb-0 txt-default">{{this.date}}</p>
+        </div>
+        <div class="box ps-2 pb-1 pt-1 d-flex justify-content-end align-items-center">
+          <div class="box text-center">
+            <p class="mb-0"><span aria-label="Pesos">$</span> {{this.pesos}}</p>
+          </div>
+        </div>
+      </div>
+      {{/each}}
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

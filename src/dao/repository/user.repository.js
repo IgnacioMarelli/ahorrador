@@ -4,9 +4,7 @@ class UserRepository {
     constructor(){
         this.#model= userModel;
     }
-    async getAll(){
-        return await this.#model.find().lean();
-    }
+
     async findByName(name){
         return await this.#model.findOne({ first_name: name }).lean();
     }

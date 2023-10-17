@@ -1,10 +1,10 @@
-import { depositoModel } from "../models/desposito.model.js";
+import { plazoFijoModel } from "../models/plazoFijo.model.js";
 
 
-class DepositoRepository {
+class PlazoFijoRepository {
     #model
     constructor(){
-        this.#model= depositoModel;
+        this.#model= plazoFijoModel;
     }
     async create(fecha, cantidad,mp){
         try {
@@ -27,4 +27,4 @@ class DepositoRepository {
     }
 
 }
-export default DepositoRepository
+export default PlazoFijoRepository

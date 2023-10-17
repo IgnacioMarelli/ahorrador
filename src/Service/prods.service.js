@@ -1,11 +1,14 @@
 import CustomError from "../errors/custom.error.js";
 import ErrorEnum from "../errors/error.enum.js";
+import mongoose from 'mongoose';
 export default class ProdService {
     #dao;
-    #depositoService;
-    constructor(dao, depositoService) {
+    #plazoFijoService;
+    #ingresoRepository;
+    constructor(dao, plazoFijoService, ingresoRepository) {
       this.#dao = dao;
-      this.#depositoService=depositoService;
+      this.#plazoFijoService=plazoFijoService;
+      this.#ingresoRepository=ingresoRepository;
     }
     async getDolarBlue(){
         const url = 'https://dolarapi.com/v1/dolares/blue';
@@ -19,12 +22,15 @@ export default class ProdService {
     async getObjetivo(req){
         try { 
             let user = await this.#dao.findByName(req.user.first_name);
+            const {limit, ingreso} = req.query;
+            const usuario = user._id.toString();
+            const response = await this.#ingresoRepository.getAll({limit: 3, ingreso, usuario, lean: true});
             await this.updateDay(user)
             await this.plazoFijo(user)
             user = await this.#dao.findByName(req.user.first_name);
             const diarioPesificado= await this.objetivoDiario(user.objetivo, user.disponiblePesos, user.tiempo, user.salario, user.disponibleUSD)
             const mesPesificado = diarioPesificado*30.4;
-            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:user.tiempo};
+            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:user.tiempo, ingresos:response};
             return sueño
         } catch (error) {
             console.error(error);
@@ -33,9 +39,9 @@ export default class ProdService {
     async post(req, res){
         try {
             const result = await this.getDolarBlue();
-            const objetivoTotal = req.body.objetivo/result.venta;
+            const objetivoTotal = req.body.objetivo/result;
             const ahorros = req.body.ahorros;
-            const ahorrosUSD = req.body.ahorrosUSD*result.venta;
+            const ahorrosUSD = req.body.ahorrosUSD*result;
             const salario = req.body.salario;
             const tiempo = req.body.tiempo;
             const user = req.user;
@@ -77,16 +83,18 @@ export default class ProdService {
             const ingreso= Number(req.body.ingreso);
             const name = req.user.first_name;
             let user = await this.#dao.findByName(name);
-            await this.updateDay(user);
-            user = await this.#dao.findByName(name);
+            const date= Date.now();
+            await this.#ingresoRepository.create(date, ingreso, req.body.razon, user._id);
             let data = {disponiblePesos:user.disponiblePesos+ingreso};
             if (req.body.plazoFijo) {
                 await this.addPlazoFijo(req, name);
                 user = await this.#dao.findByName(name);
             }
             await this.#dao.updateUser(user.first_name, user, data);
-            if(req.body.mpGasto===true){
-                await this.#dao.updatemp(user.first_name, ingreso);
+            if (ingreso<0) {
+                if(req.body.mpGasto===true){
+                    await this.#dao.updatemp(user.first_name, ingreso);
+                }
             }
         } catch (error) {
             console.error(error);
@@ -114,7 +122,7 @@ export default class ProdService {
             const tiempo=user.tiempo-1;
             await this.#dao.updateUser(req.user.first_name, req.user, {tiempo: tiempo});   
         }
-
+        
     }
     async plazoFijo(user){
         if(user.plazoFijoBanco.length>0){
@@ -128,7 +136,7 @@ export default class ProdService {
                         const porcentaje= e.deposito.pesos*mes/100;
                         e.deposito.pesos = e.deposito.pesos + porcentaje*meses;
                         const listo = {pesos:e.deposito.pesos, date:Date.now()};
-                        await this.#depositoService.updateDeposito(e._id,e.deposito,listo)
+                        await this.#plazoFijoService.updateDeposito(e._id,e.deposito,listo)
                     }
                 });
         }
@@ -142,7 +150,7 @@ export default class ProdService {
                 const porcentaje= user.plazoFijoMP.pesos*dia/100;
                 const result = user.plazoFijoMP.pesos + porcentaje*dias;
                 const realData={plazoFijoMP:{pesos:result, date:Date.now()}}
-                await this.#depositoService.updateUser(user.first_name, user, realData);
+                await this.#dao.updateUser(user.first_name, user, realData);
             };
     }
     }
@@ -154,7 +162,7 @@ export default class ProdService {
             return await this.#dao.updateUser(user.first_name, user, realData);
         }
         const ahora = Date.now();
-        const deposito= await this.#depositoService.create(ahora,req.body.ingreso, req.body.plazoFijo);
+        const deposito= await this.#plazoFijoService.create(ahora,req.body.ingreso, req.body.plazoFijo);
         const id = deposito._id.toString();
         return await this.#dao.addMoney(name, id, req.body.plazoFijo);
     }

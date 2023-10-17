@@ -1,6 +1,6 @@
 import GuisoService from "../Service/guiso.service.js";
 import GuisoRepository from "../dao/repository/guiso.repository.js";
-import DepositoRepository from "../dao/repository/deposito.repository.js";
+import PlazoFijoRepository from "../dao/repository/plazoFijo.repository.js";
 class GuisoController {
     #service;
     constructor(service){
@@ -24,5 +24,5 @@ class GuisoController {
     }
 
 }
-const guisoController = new GuisoController(new GuisoService(new (GuisoRepository),new (DepositoRepository)));
+const guisoController = new GuisoController(new GuisoService(new (GuisoRepository),new (PlazoFijoRepository)));
 export default guisoController

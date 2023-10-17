@@ -1,15 +1,15 @@
 
 export default class GuisoService {
     #dao;
-    #depositoService;
-    constructor(dao, depositoService) {
+    #plazoFijoService;
+    constructor(dao, plazoFijoService) {
       this.#dao = dao;
-      this.#depositoService=depositoService;
+      this.#plazoFijoService=plazoFijoService;
     }
     async guisoPost (req){
         try {
             const ahora= Date.now();
-            const deposito= await this.#depositoService.create(ahora,req.body.deposito);
+            const deposito= await this.#plazoFijoService.create(ahora,req.body.deposito);
             const user = await this.#dao.findByName('guiso');
             if(!user){await this.#dao.create();}
             const id = deposito._id.toString();
@@ -37,7 +37,7 @@ export default class GuisoService {
                 const porcentaje= e.deposito.pesos*mes/100;
                 e.deposito.pesos = e.deposito.pesos + porcentaje*meses;
                 const listo = {pesos:e.deposito.pesos, date:Date.now()};
-                await this.#depositoService.updateDeposito(e._id,e.deposito,listo)
+                await this.#plazoFijoService.updateDeposito(e._id,e.deposito,listo)
             }
         });
         return 

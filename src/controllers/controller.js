@@ -1,6 +1,7 @@
 import ProdService from '../Service/prods.service.js';
 import UserRepository from '../dao/repository/user.repository.js';
-import DepositoRepository from "../dao/repository/deposito.repository.js";
+import PlazoFijoRepository from "../dao/repository/plazoFijo.repository.js";
+import IngresoRepository from "../dao/repository/ingreso.repository.js"
 class Controller {
     #service;
     constructor(service){
@@ -43,5 +44,5 @@ class Controller {
         }
     }   
 }
-const controller = new Controller(new ProdService(new (UserRepository), new (DepositoRepository)));
+const controller = new Controller(new ProdService(new (UserRepository), new (PlazoFijoRepository), new(IngresoRepository)));
 export default controller

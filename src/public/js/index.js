@@ -38,6 +38,17 @@ async function primerClick(){
     }
 }
 
+function descheck(elem) {
+    const element = document.getElementById(`${elem.id}`);
+    element.checked = false;
+    element.setAttribute("onclick",`check(${elem.id})`)
+}
+function check(elem) {
+    const element = document.getElementById(`${elem.id}`);
+    element.checked = true;
+    element.setAttribute("onclick",`descheck(${elem.id})`)
+}
+
 
 async function segundoClick(){
     try{
@@ -47,6 +58,7 @@ async function segundoClick(){
         const mercadopago = document.getElementById("MercadoPago");
         const mercadopagoGasto = document.getElementById("MercadoPagoGasto");
         const mercadoPagoIngreso = document.getElementById("MercadoPagoIngreso");
+        const razon = document.querySelector(".razon").value;
         let response;
         let ingreso;
         let plazoFijo;
@@ -66,7 +78,7 @@ async function segundoClick(){
             if (nuevoGasto<0) {
                 ingreso=nuevoGasto;
                 const mpGasto= mercadopagoGasto.checked;
-                response = await api.put(`/api/inicio`,{ingreso, mpGasto});
+                response = await api.put(`/api/inicio`,{ingreso, mpGasto, razon});
               }else{
                   ingreso=nuevoIngreso;
                   response = await api.put(`/api/inicio`,{ingreso});
@@ -186,4 +198,9 @@ function mostrarOpciones() {
     } else {
       opciones.style.display = "none";
     }
+}
+function options(elem){
+    const opciones = document.getElementById(`${elem.id}`);
+    opciones.style.display = "block";
+    element.setAttribute("onclick",`noOption(${elem.id})`)
 }
