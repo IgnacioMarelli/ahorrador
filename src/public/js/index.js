@@ -199,8 +199,30 @@ function mostrarOpciones() {
       opciones.style.display = "none";
     }
 }
-function options(elem){
-    const opciones = document.getElementById(`${elem.id}`);
-    opciones.style.display = "block";
-    element.setAttribute("onclick",`noOption(${elem.id})`)
+function options(elem1, elem2, elem3){
+    const checkbox = document.getElementById(`${elem1.id}`);
+    checkbox.style.display = "block";
+    const opciones = document.getElementById(`${elem2.id}`);
+    opciones.setAttribute("onclick",`noOption(${elem1.id},${elem2.id})`)
+    
 }
+function noOption(elem1, elem2){
+    const checkbox = document.getElementById(`${elem1.id}`);
+    checkbox.style.display = "none";
+    const opciones = document.getElementById(`${elem2.id}`);
+    opciones.setAttribute("onclick",`options(${elem1.id},${elem2.id})`)
+}
+const animateButton = function(e) {
+    e.preventDefault;
+    e.target.classList.remove('animate');
+    e.target.classList.add('animate');
+    setTimeout(function(){
+      e.target.classList.remove('animate');
+    },700);
+  };
+  
+  const bubblyButtons = document.getElementsByClassName("bubbly-button");
+  
+  for (let i = 0; i < bubblyButtons.length; i++) {
+    bubblyButtons[i].addEventListener('click', animateButton, false);
+  }

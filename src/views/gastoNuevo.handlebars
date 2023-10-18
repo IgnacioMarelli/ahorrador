@@ -8,8 +8,9 @@
   {{/if}}
   <div class='objetivo'>
     <div>
-        <div>
-          <p>Nuevo Ingreso: <input type="number" class="input nuevoIngreso"></p><label><input type="checkbox" id="checkbox" onclick="mostrarOpciones()"> Plazo Fijo </label>
+      <button  class=" bubbly-button"  ><span onclick="options(nuevoingreso, btnIngreso)" id="btnIngreso">NUEVO INGRESO</span> 
+        <div   id="nuevoingreso" style="display: none;">
+          <p>Nuevo Ingreso: <input type="number" class="input nuevoIngreso"></p><label><input type="checkbox" id="checkbox" class="roundedTwo" onclick="mostrarOpciones()"> Plazo Fijo </label>
           <div id="opciones" style="display: none;">
               <input type="radio" id="MercadoPago" name="MercadoPago" onclick="check(MercadoPago)" value="1">
               <label for="MercadoPago">Me transfirieron en MercadoPago</label><br>
@@ -19,16 +20,20 @@
               <label for="Banco">Banco</label>
           </div>
        </div>
-        <p>Nuevo Gasto: <input type="number" onclick="options(razon)" class="input nuevoGasto"></p>
-        <p id="razon" style="display: none;">¿En qué gastaste? <input type="text" placeholder="Es opcional :)"  class="input razon" ></p>
-          <input type="radio" id="MercadoPagoGasto" name="MercadoPagoGasto" onclick="check(MercadoPagoGasto)" value="1">
-          <label for="MercadoPagoGasto">Es de MercadoPago el gasto?</label><br>
-        <button class="boton" onclick="segundoClick()">Calcular</button> 
+      </button> 
+       <button class="bubbly-button"  ><span onclick="options(nuevogasto, btnGasto)" id="btnGasto">NUEVO GASTO</span> 
+        <div style="display: none;" id="nuevogasto">
+          <p>Nuevo Gasto: <input type="number" onclick="options(razon)" class="input nuevoGasto"></p>
+          <p id="razon" style="display: none;">¿En qué gastaste? <input type="text" placeholder="Es opcional :)"  class="input razon" ></p>
+            <input type="radio" id="MercadoPagoGasto" name="MercadoPagoGasto" onclick="check(MercadoPagoGasto)" value="1">
+            <label for="MercadoPagoGasto">Es de MercadoPago el gasto?</label><br>
+          <button class="boton bubbly-button" onclick="segundoClick()">Calcular</button> 
+        </div>
     </div>
-  </div>
-  <div class="ingresos">
+  
+  <div class="ingresos mt-2">
       {{#each objetivo.ingresos.docs}}
-      <div class="box span mb-1 d-flex justify-content-between flex-row row-cols-2">
+      <div class="box span mb-1 d-flex justify-content-between flex-row ">
         <div class="box">
             <p class="mb-0 txt-default">{{this.date}}</p>
         </div>
@@ -40,5 +45,7 @@
       </div>
       {{/each}}
   </div>
+  </div>
+  </button>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
