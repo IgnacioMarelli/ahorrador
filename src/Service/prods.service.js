@@ -1,6 +1,5 @@
 import CustomError from "../errors/custom.error.js";
 import ErrorEnum from "../errors/error.enum.js";
-import mongoose from 'mongoose';
 export default class ProdService {
     #dao;
     #plazoFijoService;
@@ -78,12 +77,20 @@ export default class ProdService {
         const objetivoDiario = objetivoMensual/30.4;
         return objetivoDiario*result
     }
-    async update(req){
+    async update(req, next){
         try {
             const ingreso= Number(req.body.ingreso);
+            if (ingreso===0) {
+                CustomError.createError({
+                    name: 'Error en formulario',
+                    cause:`El campo de gasto o ingreso está vacío`,
+                    message:'Rellene todos los campos porfavor',
+                    code: ErrorEnum.BODY_ERROR
+                })
+            }
             const name = req.user.first_name;
             let user = await this.#dao.findByName(name);
-            const date= Date.now();
+            const date = new Date().toLocaleString();
             await this.#ingresoRepository.create(date, ingreso, req.body.razon, user._id);
             let data = {disponiblePesos:user.disponiblePesos+ingreso};
             if (req.body.plazoFijo) {
@@ -97,7 +104,7 @@ export default class ProdService {
                 }
             }
         } catch (error) {
-            console.error(error);
+            next(error);
         }
     }   
     async updateDay(user){

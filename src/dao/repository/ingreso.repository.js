@@ -12,7 +12,7 @@ class IngresoRepository {
     }
     async getAll({limit, ingreso, usuario}){
         let query = {usuario};
-        return await this.#model.paginate(query, {limit: limit, lean: true})
+        return await this.#model.paginate(query, {limit: limit, sort: { _id: -1}, lean: true})
     }
 
 }

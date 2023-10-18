@@ -7,10 +7,11 @@
   margin-bottom: 60px;
   -webkit-appearance: none;
   appearance: none;
-  background-color: #ff0081;
+  background: #ad5389;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #3c1053, #ad5389);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #3c1053, #ad5389); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */  
   color: #fff;
   border-radius: 4px;
-  border: none;
   cursor: pointer;
   position: relative;
   transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
@@ -33,13 +34,13 @@
 .bubbly-button:before {
   display: none;
   top: -75%;
-  background-image: radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, transparent 20%, #ff0081 20%, transparent 30%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
+  background-image: radial-gradient(circle, #ad120a 20%, transparent 20%), radial-gradient(circle, transparent 20%, #ff0081 20%, transparent 30%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
   background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
 }
 .bubbly-button:after {
   display: none;
   bottom: -75%;
-  background-image: radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
+  background-image: radial-gradient(circle, #ad120a 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, transparent 10%, #ff0081 15%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%), radial-gradient(circle, #ff0081 20%, transparent 20%);
   background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%;
 }
 .bubbly-button:active {
@@ -87,8 +88,7 @@ body{
 }
 .boton{
     background: #ddd6f3;
-    background: -webkit-linear-gradient(to right, #faaca8, #ddd6f3); 
-    background: linear-gradient(to right, #faaca8, #ddd6f3);     
+    background: linear-gradient(143deg, rgba(143,69,113,1) 58%, rgba(2,0,36,1) 89%);
     border-width: thick;
     border-radius: 3rem;
     margin-bottom: 1rem;
@@ -96,8 +96,8 @@ body{
 .span{
     box-shadow: 10px 10px 8px 1px rgba(0, 0, 0, 0.2);
     background: #0F2027;  
-    background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  
+    background: linear-gradient(to right, #2C5364, #203A43, #0F2027); 
     color: white;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -111,9 +111,10 @@ body{
     margin-top: 7rem;
 }
 .card{
-    background: #ee9ca7;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #ffdde1, #ee9ca7);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #ffdde1, #ee9ca7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #ee9ca7; 
+    background: -webkit-linear-gradient(to right, #ffdde1, #ee9ca7); 
+    background: linear-gradient(to right, #ffdde1, #ee9ca7);
+    display: grid;
 }
 p{
     font-size: large;

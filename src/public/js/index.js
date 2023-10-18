@@ -101,6 +101,12 @@ async function segundoClick(){
                     text: 'Error al depositar',
                     icon: 'error'
                   });   
+            }else if(response.status===400){
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Campo de ingreso o gasto vacío',
+                    icon: 'error'
+                  });   
             }else{
                 throw new Error
             }
@@ -140,6 +146,12 @@ async function nombreClick(){
                 Swal.fire({
                     title: 'Error',
                     text: 'Es probable que el servidor no este funcionando como debería',
+                    icon: 'error'
+                  });   
+            }else if(response.status===400){
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Campo nombre vacío',
                     icon: 'error'
                   });   
             }else{
