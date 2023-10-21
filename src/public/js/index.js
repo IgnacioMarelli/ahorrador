@@ -14,8 +14,8 @@ async function primerClick(){
                 text: 'Aportaste todos los datos necesarios',
                 icon: 'success'
             });
-            setTimeout(function() {
-                location.href = 'https://ahorrador-production.up.railway.app/api/inicio';
+            setTimeout( async function() {
+                await api.get('/api/inicio');
             }, 500);
         }else{
             if(response.status===500){
@@ -138,7 +138,7 @@ async function nombreClick(){
                 text: 'Aportaste todos los datos necesarios',
                 icon: 'success'
             });
-            location.href =('http://localhost:8080/api');
+            await api.get('/api')
         }else{
             if(response.status===500){
                 Swal.fire({
@@ -177,8 +177,8 @@ async function depositar(){
                 text: 'Aportaste todos los datos necesarios',
                 icon: 'success'
             });
-            setTimeout(function() {
-                location.href = 'https://ahorrador-production.up.railway.app/guiso';
+            setTimeout(async function() {
+                await api.get('/guiso');
             }, 3000);
         }else{
             if(response.status===500){

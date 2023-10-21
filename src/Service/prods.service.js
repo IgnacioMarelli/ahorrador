@@ -70,18 +70,31 @@ export default class ProdService {
             })
         }
     }
-    async balanceDiario(user, usuario, diarioPesificado){
-        const ingressos= await this.#ingresoRepository.findByID(usuario);
-        const hoy = new Date();
-        const fin = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
-        const ingresosDelDia = ingressos.filter(e => {
-            return (e.date < fin) && (e.date > user.date);
-        });
-        let balance;
-        ingresosDelDia.forEach(e=>{
-            balance= diarioPesificado+e.pesos;
-        })
-        return balance
+    async balanceDiario(user, usuario){
+        try {
+            const ingressos= await this.#ingresoRepository.findByID(usuario);
+            const hoy = new Date();
+            const fin = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
+            let balance=0;
+            const plazoFijo = await this.plazoFijo(user);
+            if(plazoFijo){
+                balance+=plazoFijo;
+            }
+            ingressos.filter(e => {
+                if((e.date < fin) && (e.date > user.date)){
+                    balance+=e.pesos;
+                };
+            });
+            return balance
+        } catch (error) {
+            CustomError.createError({
+                name:'Error en el balance',
+                cause:'Probablemente en la base de datos',
+                message:'Revise estar llamando correctamente a la base de datos',
+                cause: ErrorEnum.DATABASE_ERROR
+            })
+        }
+
     }
     async objetivoDiario(objetivo, disponible, tiempo, salario, ahorrosUSD){
         const result = await this.getDolarBlue();
@@ -172,9 +185,12 @@ export default class ProdService {
             const dias = milisegundos / 86400000;
             if(dias >= 1){
                 const porcentaje= user.plazoFijoMP.pesos*dia/100;
-                const result = user.plazoFijoMP.pesos + porcentaje*dias;
+                const ingreso=porcentaje*dias;
+                const result = user.plazoFijoMP.pesos + ingreso;
                 const realData={plazoFijoMP:{pesos:result, date:Date.now()}}
                 await this.#dao.updateUser(user.first_name, user, realData);
+                await this.#ingresoRepository(date, ingreso, 'mercado pago',user._id);
+                return porcentaje
             };
     }
     }

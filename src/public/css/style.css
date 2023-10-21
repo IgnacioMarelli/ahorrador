@@ -115,6 +115,9 @@ body{
     background: -webkit-linear-gradient(to right, #ffdde1, #ee9ca7); 
     background: linear-gradient(to right, #ffdde1, #ee9ca7);
 }
+.balanceDiv{
+  text-align: center;
+}
 p{
     font-size: large;
     padding-top: 1rem;
@@ -165,13 +168,12 @@ p{
 }
   
 @media only screen and (max-width: 600px) {
-  
-    /* Estilo del botón */
-    .boton {
-      font-size: small; /* Reducir el tamaño de la fuente */
-      padding: 5px; /* Reducir el relleno */
+    .bubbly-button{
+      margin-top:0px;
     }
-  
+    .calculo{
+      margin-left: 32%;
+    }
     /* Estilo del span */
     span {
       font-size: small; /* Reducir el tamaño de la fuente */
@@ -179,7 +181,9 @@ p{
       padding-right: 0.5rem; /* Reducir el relleno derecho */
     }
   
-     /* Estilo del input */
+     .agregar{
+      margin-top:2rem;
+     }
      .input {
        width: 80%; /* Ajustar el ancho al espacio disponible */
      }
