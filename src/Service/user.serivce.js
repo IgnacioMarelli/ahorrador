@@ -21,7 +21,7 @@ export default class userService {
                 httpOnly:true
             });
         } catch (error) {
-            next(error)
+            console.log(error)
         }
 
     }

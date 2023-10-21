@@ -23,13 +23,18 @@ export default class ProdService {
             let user = await this.#dao.findByName(req.user.first_name);
             const {limit, ingreso} = req.query;
             const usuario = user._id.toString();
-            const response = await this.#ingresoRepository.getAll({limit: 3, ingreso, usuario, lean: true});
+            const response = await this.#ingresoRepository.paginate({limit: 3, usuario, lean: true});
+            response.docs.forEach(e=>{
+                const date= e.date.toLocaleString();
+                e.date=date;
+            })
             await this.updateDay(user)
             await this.plazoFijo(user)
             user = await this.#dao.findByName(req.user.first_name);
             const diarioPesificado= await this.objetivoDiario(user.objetivo, user.disponiblePesos, user.tiempo, user.salario, user.disponibleUSD)
+            const balance = await this.balanceDiario(user, usuario, diarioPesificado);
             const mesPesificado = diarioPesificado*30.4;
-            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:user.tiempo, ingresos:response};
+            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:user.tiempo, ingresos:response, balance:balance};
             return sueño
         } catch (error) {
             console.error(error);
@@ -54,7 +59,7 @@ export default class ProdService {
                     code: ErrorEnum.BODY_ERROR
                 })
             }
-            const sueño = await this.#dao.updateUser(user.first_name, user, {objetivo:objetivoTotal, tiempo: tiempo, salario: salario, disponiblePesos:ahorros, disponibleUSD:ahorrosUSD, objetivoDiario:objetivoDiario});
+            const sueño = await this.#dao.updateUser(user.first_name, user, {objetivo:objetivoTotal, tiempo: tiempo, salario: salario, disponiblePesos:ahorros, disponibleUSD:ahorrosUSD});
             return sueño
         }catch (error) {
             throw CustomError.createError({
@@ -65,7 +70,19 @@ export default class ProdService {
             })
         }
     }
-    
+    async balanceDiario(user, usuario, diarioPesificado){
+        const ingressos= await this.#ingresoRepository.findByID(usuario);
+        const hoy = new Date();
+        const fin = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
+        const ingresosDelDia = ingressos.filter(e => {
+            return (e.date < fin) && (e.date > user.date);
+        });
+        let balance;
+        ingresosDelDia.forEach(e=>{
+            balance= diarioPesificado+e.pesos;
+        })
+        return balance
+    }
     async objetivoDiario(objetivo, disponible, tiempo, salario, ahorrosUSD){
         const result = await this.getDolarBlue();
         const ahorroPesoDolar= disponible/result;
@@ -90,7 +107,7 @@ export default class ProdService {
             }
             const name = req.user.first_name;
             let user = await this.#dao.findByName(name);
-            const date = new Date().toLocaleString();
+            const date = Date.now();
             await this.#ingresoRepository.create(date, ingreso, req.body.razon, user._id);
             let data = {disponiblePesos:user.disponiblePesos+ingreso};
             if (req.body.plazoFijo) {

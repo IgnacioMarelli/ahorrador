@@ -4,7 +4,7 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 export const ingresoCollection = 'ingreso';
 
 const ingresoSchema = new mongoose.Schema({
-  date:{type: String},
+  date:{type: Date},
   pesos:{type: Number, default: 0},
   razon:{type:String, default: ""},
   usuario:{type: String, required: true},

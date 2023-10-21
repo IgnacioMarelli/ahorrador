@@ -134,7 +134,7 @@ class UsersController {
                 cart:cart
             })
         } catch (error) {
-            throw CustomError.createError({
+            throw createError({
                 name:'Error al renderizar',
                 cause:'El error ocurrió al renderizar admin en handlebars',
                 message:'Verifique que este bien la view de handlebars',

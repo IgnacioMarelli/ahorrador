@@ -138,9 +138,7 @@ async function nombreClick(){
                 text: 'Aportaste todos los datos necesarios',
                 icon: 'success'
             });
-            setTimeout(function() {
-                location.href = 'https://ahorrador-production.up.railway.app/api';
-            }, 500);
+            location.href =('http://localhost:8080/api');
         }else{
             if(response.status===500){
                 Swal.fire({

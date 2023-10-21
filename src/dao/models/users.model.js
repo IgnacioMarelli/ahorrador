@@ -14,10 +14,6 @@ const userSchema = new mongoose.Schema({
   },
   date:{type:Date},
   creationDate:{type:Date},
-  objetivoDiario:{
-    type:Number,
-    default: 0
-  },
   disponiblePesos:{
     type:Number
   },

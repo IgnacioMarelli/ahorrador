@@ -6,6 +6,7 @@
       <p><span class="p-2 span">Tiempo para cumplir hasta cumplir objetivo:    {{objetivo.tiempo}}</span></p>
     </div>
   {{/if}}
+  
   <div class='objetivo agregar'>
     <div>
       <button  class=" bubbly-button"  ><span onclick="options(nuevoingreso, btnIngreso)" id="btnIngreso">NUEVO INGRESO</span> 
@@ -30,8 +31,10 @@
           <button class="boton bubbly-button" onclick="segundoClick()">Calcular</button> 
         </div>
     </div>
-  
-  <div class="ingresos mt-2">
+  <div class="balance">
+    <p>Balance diario {{objetivo.balance}}</p>
+  </div>
+  <div class="ingresos mt-2 mb-2">
       {{#each objetivo.ingresos.docs}}
       <div class="box span mb-1 d-flex justify-content-between flex-row ">
         <div class="box">

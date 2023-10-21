@@ -30,8 +30,8 @@ const passportCall =
 const created = ()=>{
   return async (req, res, next)=>{
     try {
-      if(req.user?.objetivoDiario) {res.redirect('/api/inicio')};
-      next();
+      const url = req.user.objetivo > 0 ? '/api/inicio' : '/api';
+      await res.redirect(url);
     } catch (error) {
       console.error(error); 
     }
