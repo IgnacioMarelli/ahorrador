@@ -138,7 +138,7 @@ async function nombreClick(){
                 text: 'Aportaste todos los datos necesarios',
                 icon: 'success'
             });
-            await api.get('/api')
+            await api.get('/api');
         }else{
             if(response.status===500){
                 Swal.fire({
@@ -158,6 +158,7 @@ async function nombreClick(){
             
         }}
     }catch(error){
+        console.error(error);
         Swal.fire({
             title: 'Error',
             text: 'Hubo un error en la solicitud',

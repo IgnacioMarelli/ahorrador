@@ -42,7 +42,7 @@ const api = {
       });
   
       if (response.ok) {
-        return response.json();
+        window.location.replace(response.url);
       }
   
       response.json().then((d) => alert(JSON.stringify(d)));
