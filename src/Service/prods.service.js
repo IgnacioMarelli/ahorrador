@@ -34,7 +34,7 @@ export default class ProdService {
             const diarioPesificado= await this.objetivoDiario(user.objetivo, user.disponiblePesos, user.tiempo, user.salario, user.disponibleUSD)
             const balance = await this.balanceDiario(user, usuario, diarioPesificado);
             const mesPesificado = diarioPesificado*30.4;
-            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:user.tiempo, ingresos:response, balance:balance};
+            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:user.tiempo, ingresos:response, balance:balance.balance, balanceMensual:balance.balanceMensual};
             return sueño
         } catch (error) {
             console.error(error);
@@ -76,6 +76,7 @@ export default class ProdService {
             const hoy = new Date();
             const fin = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
             let balance=0;
+            let balanceMensual= 0;
             const plazoFijo = await this.plazoFijo(user);
             if(plazoFijo){
                 balance+=plazoFijo;
@@ -85,8 +86,13 @@ export default class ProdService {
                     balance+=e.pesos;
                 };
             });
-            return balance
+            ingressos.filter(e => {
+                if((new Date(e.date).getMonth() == hoy.getMonth()) && (new Date(e.date).getFullYear() == hoy.getFullYear())){                    balanceMensual+=e.pesos; 
+                }; 
+            });
+            return {balance, balanceMensual}
         } catch (error) {
+            console.error(error);
             CustomError.createError({
                 name:'Error en el balance',
                 cause:'Probablemente en la base de datos',
