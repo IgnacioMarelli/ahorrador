@@ -25,7 +25,7 @@ export default class ProdService {
             const usuario = user._id.toString();
             const response = await this.#ingresoRepository.paginate({limit: 3, usuario, lean: true});
             response.docs.forEach(e=>{
-                const date= e.date.toLocaleString();
+                const date= e.date.toLocaleString("es-AR", {timeZone: "America/Argentina/Buenos_Aires"});
                 e.date=date;
             })
             await this.updateDay(user)
@@ -144,6 +144,10 @@ export default class ProdService {
         }
     }   
     async updateDay(user){
+        let now = new Date();
+        let oneMonth = new Date(now);
+        oneMonth.setDate(oneMonth.getDate() - 31);
+        await this.#ingresoRepository.deleteIngreso(oneMonth);
         const fechaInicio =user.date;
         const fechaFin =Date.now();
         const diferencia = fechaFin - fechaInicio;

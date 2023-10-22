@@ -16,14 +16,12 @@ class UserRepository {
         }
 
     }
+
     async updatemp(name, pesos){
         return await this.#model.updateOne({first_name:name}, {$inc:{"plazoFijoMP.pesos":pesos}});
     }
     async updateUser(name, usuario, nuevosDatos){
         return await this.#model.updateOne({ first_name: name },{ ...usuario, ...nuevosDatos });
-    }
-    async addDoc(id, filename, filePath ){
-        return await this.#model.findOneAndUpdate({_id: id}, {$push: {documents: {name:filename, reference:filePath}}})
     }
     async plazoFijo(name, plazoFijo, dep,date){
         if (plazoFijo==='mercadopago') {

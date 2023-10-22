@@ -17,6 +17,9 @@ class IngresoRepository {
     async findByID(id){
         return await this.#model.find({ usuario: id }).lean();
     }
+    async deleteIngreso(oneMonth){
+        return await this.#model.deleteMany({date: {$lt: oneMonth}})
+    }
 
 }
 export default IngresoRepository
