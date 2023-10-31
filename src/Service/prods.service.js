@@ -167,7 +167,7 @@ export default class ProdService {
         }
         if(mesesPasados>30.4){
             const tiempo=user.tiempo-1;
-            await this.#dao.updateUser(req.user.first_name, req.user, {tiempo: tiempo});   
+            await this.#dao.updateUser(user.first_name, user, {tiempo: tiempo});   
         }
         
     }
@@ -199,7 +199,7 @@ export default class ProdService {
                 const result = user.plazoFijoMP.pesos + ingreso;
                 const realData={plazoFijoMP:{pesos:result, date:Date.now()}}
                 await this.#dao.updateUser(user.first_name, user, realData);
-                await this.#ingresoRepository(date, ingreso, 'mercado pago',user._id);
+                await this.#ingresoRepository.create(date, ingreso, 'mercado pago',user._id);
                 return porcentaje
             };
     }
