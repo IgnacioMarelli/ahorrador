@@ -32,9 +32,10 @@ export default class ProdService {
             await this.plazoFijo(user)
             user = await this.#dao.findByName(req.user.first_name);
             const diarioPesificado= await this.objetivoDiario(user.objetivo, user.disponiblePesos, user.tiempo, user.salario, user.disponibleUSD)
-            const balance = await this.balanceDiario(user, usuario, diarioPesificado);
-            const mesPesificado = diarioPesificado*30.4;
-            const sueño = {objetivoMensual:mesPesificado, objetivoDiario:diarioPesificado, tiempo:user.tiempo, ingresos:response, balance:balance.balance, balanceMensual:balance.balanceMensual};
+            const balance = await this.balanceDiario(user, usuario, diarioPesificado.objetivoDiario);
+            const mesPesificado = diarioPesificado.objetivoDiario*30.4;
+            const progreso= diarioPesificado.ahorroTotal*100/user.objetivo;
+            const sueño = {objetivoMensual:mesPesificado, progreso:progreso, objetivoDiario:diarioPesificado.objetivoDiario, tiempo:user.tiempo, ingresos:response, balance:balance.balance, balanceMensual:balance.balanceMensual};
             return sueño
         } catch (error) {
             console.error(error);
@@ -49,7 +50,6 @@ export default class ProdService {
             const salario = req.body.salario;
             const tiempo = req.body.tiempo;
             const user = req.user;
-            const objetivoDiario = await this.objetivoDiario(objetivoTotal, ahorros, tiempo, salario, ahorrosUSD);
             const keyWithEmptyValue = Object.entries(req.body).find(([key, value]) => value === "");
             if(keyWithEmptyValue){
                 CustomError.createError({
@@ -111,7 +111,7 @@ export default class ProdService {
         const salarioDolar = salario/result;
         const objetivoMensual = salarioDolar-real;
         const objetivoDiario = objetivoMensual/30.4;
-        return objetivoDiario*result
+        return{objetivoDiario:objetivoDiario*result, ahorroTotal:ahorroDolar}
     }
     async update(req, next){
         try {
@@ -168,6 +168,7 @@ export default class ProdService {
         if(mesesPasados>30.4){
             const tiempo=user.tiempo-1;
             await this.#dao.updateUser(user.first_name, user, {tiempo: tiempo});   
+            await this.#dao.updateUser(user.first_name, user, {creationDate: fechaFin}); 
         }
         
     }

@@ -6,7 +6,9 @@
       <p><span class="p-2 span">Tiempo para cumplir hasta cumplir objetivo: {{objetivo.tiempo}}</span></p>
     </div>
   {{/if}}
-  
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: {{objetivo.progreso}}%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
   <div class='objetivo agregar d-flex justify-content-around'>
     <div>
       <button  class=" bubbly-button"  ><span onclick="options(nuevoingreso, btnIngreso)" id="btnIngreso">NUEVO INGRESO</span> 
