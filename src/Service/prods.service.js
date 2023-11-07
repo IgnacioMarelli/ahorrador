@@ -34,7 +34,7 @@ export default class ProdService {
             const diarioPesificado= await this.objetivoDiario(user.objetivo, user.disponiblePesos, user.tiempo, user.salario, user.disponibleUSD)
             const balance = await this.balanceDiario(user, usuario, diarioPesificado.objetivoDiario);
             const mesPesificado = diarioPesificado.objetivoDiario*30.4;
-            const progreso= diarioPesificado.ahorroTotal*100/user.objetivo;
+            const progreso= Math.round(diarioPesificado.ahorroTotal*100/user.objetivo);
             const sueño = {objetivoMensual:mesPesificado, progreso:progreso, objetivoDiario:diarioPesificado.objetivoDiario, tiempo:user.tiempo, ingresos:response, balance:balance.balance, balanceMensual:balance.balanceMensual};
             return sueño
         } catch (error) {
